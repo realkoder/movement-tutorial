@@ -1,0 +1,103 @@
+main {
+    display: flex;
+    justify-content: center;
+    margin: 8em;
+}
+
+
+#gamefield {
+    border: 1px solid chartreuse;
+    width: fit-content;
+    display: grid;
+    grid-template-rows: 100%;
+    grid-template-columns: 100%;
+}
+
+#background {
+    grid-area: 1/1;
+    width: calc(16 * 32px);
+    height: calc(12 * 32px);
+}
+
+#items {
+    grid-area: 1/1;
+}
+
+#characters {
+    grid-area: 1/1;
+}
+
+#player {
+    width: 32px;
+    aspect-ratio: 16 / 20;
+    background-image: url('images/Characters/Character\ 8.png');
+    background-size: 400% 400%;
+    image-rendering: pixelated;
+
+}
+
+#player.animate {
+    animation-duration: 0.25s;
+    animation-timing-function: steps(4);
+    animation-iteration-count: infinite;
+}
+
+#player.right {
+    background-position: 0% 0%;
+    animation-name: right;
+}
+
+#player.left {
+    background-position: 0% 0%;
+    animation-name: left;
+}
+
+#player.up {
+    background-position: 0% 0%;
+    animation-name: up;
+}
+
+#player.down {
+    background-position: 0% 0%;
+    animation-name: down;
+}
+
+@keyframes right {
+    from {
+        background-position: 0 100%;
+    }
+
+    to {
+        background-position: -400% 100%;
+    }
+}
+
+@keyframes left {
+    from {
+        background-position: 0% 200%;
+    }
+
+    to {
+        background-position: -400% 200%;
+    }
+}
+
+@keyframes up {
+    from {
+        background-position: 0% 300%;
+    }
+
+    to {
+        background-position: -400% 300%;
+    }
+}
+
+@keyframes down {
+    from {
+        background-position: 0% 0%;
+    }
+
+    to {
+        background-position: -400% 0%;
+    }
+}
