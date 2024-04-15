@@ -2,7 +2,9 @@
 const player = {
     x: 0,
     y: 0,
-    speed: 200,
+    regX: 10,
+    regY: 12,
+    speed: 120,
     moving: false,
     direction: undefined
 }
@@ -13,13 +15,35 @@ const GRID_HEIGHT = 10;
 const GRID_WIDTH = 16;
 const TILE_SIZE = 32;
 
-for (let i = 0; i < GRID_HEIGHT; i++) {    
+for (let i = 0; i < GRID_HEIGHT; i++) {
     const tileRow = [];
     for (let j = 0; j < GRID_WIDTH; j++) {
-        tileRow.push(Math.floor(Math.random() * 3) + 1);
+        tileRow.push(2);
     }
     tiles.push(tileRow);
 }
+
+tiles[0][0] = 1;
+tiles[1][0] = 1;
+tiles[2][0] = 1;
+tiles[3][0] = 1;
+tiles[4][0] = 1;
+tiles[4][1] = 1;
+tiles[4][2] = 1;
+tiles[4][3] = 1;
+tiles[4][4] = 1;
+tiles[4][5] = 1;
+tiles[3][5] = 1;
+tiles[2][5] = 1;
+tiles[1][5] = 1;
+tiles[1][6] = 1;
+tiles[1][7] = 1;
+tiles[1][8] = 1;
+
+tiles[8][8] = 4;
+tiles[8][9] = 4;
+tiles[7][8] = 4;
+tiles[7][9] = 4;
 
 console.log(tiles);
 
@@ -41,7 +65,7 @@ function createTiles() {
 
     background.style.setProperty("--GRID_WIDTH", GRID_WIDTH);
     background.style.setProperty("--GRID_HEIGHT", GRID_HEIGHT);
-    background.style.setProperty("--TILE_SIZE", TILE_SIZE+"px");
+    background.style.setProperty("--TILE_SIZE", TILE_SIZE + "px");
     console.log(tiles);
 }
 
@@ -49,9 +73,9 @@ function displayTile() {
     const visualTiles = document.querySelectorAll("#background .tile");
 
     for (let row = 0; row < GRID_HEIGHT; row++) {
-        for (let col = 0; col <GRID_WIDTH; col++) {
-            const modelTile = getTileAt({row, col});
-            const visualTile = visualTiles[row*GRID_WIDTH+col];
+        for (let col = 0; col < GRID_WIDTH; col++) {
+            const modelTile = getTileAt({ row, col });
+            const visualTile = visualTiles[row * GRID_WIDTH + col];
 
             visualTile.classList.add(getClassForTileType(modelTile));
         }
@@ -59,11 +83,19 @@ function displayTile() {
 }
 
 function getClassForTileType(tiletype) {
-    switch(tiletype) {
+    switch (tiletype) {
         case 1: return "path";
-        case 2: return "water";        
+        case 2: return "water";
         case 3: return "stone";
+        case 4: return "tree";
     }
+}
+
+function coordFromPos({ x, y }) {
+    const col = Math.round(x / 32);
+    const row = Math.round(y / 32);
+    const coord = { row, col };
+    return coord;
 }
 
 
@@ -175,6 +207,20 @@ function movePlayer(deltaTime) {
 }
 
 function canMoveTo(position) {
+    const { row, col } = coordFromPos(position);
+
+    if (row < 0 || row >= GRID_HEIGHT || col < 0 || col >= GRID_WIDTH) {
+        return false
+    }
+
+    const tileType = getTileAt({ row, col });
+    switch (tileType) {
+        case 1: return true;
+        case 2: return false;
+        case 3: return true;
+        case 4: return false
+    }
+
     if (position.x < 0 || position.x > 485 || position.y < 0 || position.y > 340) {
         return false
     } else return true;
@@ -190,6 +236,54 @@ function tick(timestamp) {
 
     displayPlayerAtPostion();
     displayPlayerAnimation();
+    showDebugging();
+}
+
+function showDebugging() {
+    showDebugTileUnderPlayer();
+    showDubPlayerRect();
+    showDebugPlayerRegistrationPoint();
+}
+
+let lastplayerCoord = { row: 0, col: 0 };
+
+function showDubPlayerRect() {
+    const visualPlayer = document.querySelector("#player");
+    if (!visualPlayer.classList.contains("show-rect")) {
+        visualPlayer.classList.add("show-rect");
+    }
+}
+
+function showDebugTileUnderPlayer() {
+    const coord = coordFromPos(player);
+    if (coord.row != lastplayerCoord.row || coord.col != lastplayerCoord.col) {
+        unHighlightTile(lastplayerCoord);
+        highlightTile(coord);
+    }
+
+    lastplayerCoord = coord;
+}
+
+function highlightTile({ row, col }) {
+    const visualTiles = document.querySelectorAll("#background .tile");
+    const visualTile = visualTiles[row * GRID_WIDTH + col];
+    visualTile.classList.add("highlight");
+}
+
+function unHighlightTile({ row, col }) {
+    const visualTiles = document.querySelectorAll("#background .tile");
+    const visualTile = visualTiles[row * GRID_WIDTH + col];
+    visualTile.classList.remove("highlight");
+}
+
+function showDebugPlayerRegistrationPoint() {
+    const visualPlayer = document.querySelector("#player");
+    if (!visualPlayer.classList.contains("show-reg-point")) {
+        visualPlayer.classList.add("show-reg-point");
+    }
+
+    visualPlayer.style.setProperty("--REGX", player.regX + "px");
+    visualPlayer.style.setProperty("--REGY", player.regY + "px");
 }
 
 // Executes

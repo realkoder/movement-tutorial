@@ -39,6 +39,10 @@ main {
     background-image: url('images/tiles/floor_stone.png');
 }
 
+.tile.tree {
+    background-image: url('images/tiles/tree.png');
+}
+
 #items {
     grid-area: 1/1;
 }
@@ -120,4 +124,17 @@ main {
     to {
         background-position: -400% 0%;
     }
+}
+
+.highlight {
+    outline: 2px dashed yellow;
+    translate: 0 0;
+}
+
+.show-rect {
+    outline: 2px solid red;
+}
+
+.show-reg-point {
+    
 }
