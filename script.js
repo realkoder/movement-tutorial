@@ -2,8 +2,8 @@
 const player = {
     x: 0,
     y: 0,
-    regX: 10,
-    regY: 12,
+    regX: 14,
+    regY: 32,
     speed: 120,
     moving: false,
     direction: undefined
@@ -92,8 +92,8 @@ function getClassForTileType(tiletype) {
 }
 
 function coordFromPos({ x, y }) {
-    const col = Math.round(x / 32);
-    const row = Math.round(y / 32);
+    const col = Math.floor(x / 32);
+    const row = Math.floor(y / 32);
     const coord = { row, col };
     return coord;
 }
@@ -154,7 +154,7 @@ function addKeyControlListeners() {
 
 function displayPlayerAtPostion() {
     const visualPlayer = document.getElementById("player");
-    visualPlayer.style.translate = `${player.x}px ${player.y}px`;
+    visualPlayer.style.translate = `${player.x - player.regX}px ${player.y - player.regY}px`;
 }
 
 function displayPlayerAnimation() {
