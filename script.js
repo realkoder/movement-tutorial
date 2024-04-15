@@ -1,5 +1,4 @@
 // Objects
-
 const player = {
     x: 0,
     y: 0,
@@ -7,6 +6,66 @@ const player = {
     moving: false,
     direction: undefined
 }
+
+const tiles = [];
+
+const GRID_HEIGHT = 10;
+const GRID_WIDTH = 16;
+const TILE_SIZE = 32;
+
+for (let i = 0; i < GRID_HEIGHT; i++) {    
+    const tileRow = [];
+    for (let j = 0; j < GRID_WIDTH; j++) {
+        tileRow.push(Math.floor(Math.random() * 3) + 1);
+    }
+    tiles.push(tileRow);
+}
+
+console.log(tiles);
+
+function getTileAt({ row, col }) {
+    if (row < 0 || col < 0 || row >= GRID_HEIGHT || col >= GRID_WIDTH) return "FUCK YOU!";
+
+    return tiles[row][col];
+}
+
+function createTiles() {
+    const background = document.getElementById("background");
+
+    tiles.forEach(tileRow => tileRow.forEach(tile => {
+        const tileDiv = document.createElement("div");
+        tileDiv.classList.add("tile");
+        tileDiv.classList.add(tile);
+        background.appendChild(tileDiv);
+    }));
+
+    background.style.setProperty("--GRID_WIDTH", GRID_WIDTH);
+    background.style.setProperty("--GRID_HEIGHT", GRID_HEIGHT);
+    background.style.setProperty("--TILE_SIZE", TILE_SIZE+"px");
+    console.log(tiles);
+}
+
+function displayTile() {
+    const visualTiles = document.querySelectorAll("#background .tile");
+
+    for (let row = 0; row < GRID_HEIGHT; row++) {
+        for (let col = 0; col <GRID_WIDTH; col++) {
+            const modelTile = getTileAt({row, col});
+            const visualTile = visualTiles[row*GRID_WIDTH+col];
+
+            visualTile.classList.add(getClassForTileType(modelTile));
+        }
+    }
+}
+
+function getClassForTileType(tiletype) {
+    switch(tiletype) {
+        case 1: return "path";
+        case 2: return "water";        
+        case 3: return "stone";
+    }
+}
+
 
 const controls = {
     left: false,
@@ -21,6 +80,8 @@ let lastTimestamp = 0;
 function run() {
     requestAnimationFrame(tick);
     addKeyControlListeners();
+    createTiles();
+    displayTile();
 }
 
 function addKeyControlListeners() {
@@ -67,13 +128,13 @@ function displayPlayerAtPostion() {
 function displayPlayerAnimation() {
     const visualPlayer = document.getElementById("player");
 
-    if(!player.moving) {
+    if (!player.moving) {
         visualPlayer.classList.remove("animate");
     } else if (!visualPlayer.classList.contains("animate")) {
         visualPlayer.classList.add("animate");
     }
 
-    if (player.direction && !visualPlayer.classList.contains(player.direction)) {        
+    if (player.direction && !visualPlayer.classList.contains(player.direction)) {
         visualPlayer.classList.remove("up", "down", "left", "right");
         visualPlayer.classList.add(player.direction);
     }
@@ -107,7 +168,7 @@ function movePlayer(deltaTime) {
         newPos.y += player.speed * deltaTime;
     }
 
-    if(canMoveTo(newPos)) {
+    if (canMoveTo(newPos)) {
         player.x = newPos.x;
         player.y = newPos.y;
     } else player.moving = false

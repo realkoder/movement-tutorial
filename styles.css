@@ -14,9 +14,29 @@ main {
 }
 
 #background {
+    display: grid;
     grid-area: 1/1;
-    width: calc(16 * 32px);
-    height: calc(12 * 32px);
+    grid-template-columns: repeat(var(--GRID_WIDTH), max-content);
+}
+
+#background .tile {
+    width: var(--TILE_SIZE);
+    aspect-ratio: 1/1;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    image-rendering: pixelated;
+}
+
+.tile.path {
+    background-image: url('images/tiles/path.png');
+}
+
+.tile.water {
+    background-image: url('images/tiles/water.png');
+}
+
+.tile.stone {
+    background-image: url('images/tiles/floor_stone.png');
 }
 
 #items {
