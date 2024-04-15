@@ -282,8 +282,8 @@ function showDebugPlayerRegistrationPoint() {
         visualPlayer.classList.add("show-reg-point");
     }
 
-    visualPlayer.style.setProperty("--REGX", player.regX + "px");
-    visualPlayer.style.setProperty("--REGY", player.regY + "px");
+    visualPlayer.style.setProperty("--regX", player.regX + "px");
+    visualPlayer.style.setProperty("--regY", player.regY + "px");
 }
 
 // Executes

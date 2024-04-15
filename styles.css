@@ -135,6 +135,13 @@ main {
     outline: 2px solid red;
 }
 
-.show-reg-point {
-    
+.show-reg-point::before {
+    content: "";
+    position: absolute;
+    background: cyan;
+    border-radius: 50%;
+    width: 5px;
+    height: 5px;
+
+    translate: var(--regX) var(--regY);
 }
