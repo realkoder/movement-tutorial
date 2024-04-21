@@ -4,6 +4,12 @@ const player = {
     y: 0,
     regX: 14,
     regY: 32,
+    hitbox: {
+        x: 4,
+        y: 7,
+        w: 12,
+        h: 17,
+    },
     speed: 120,
     moving: false,
     direction: undefined
@@ -12,7 +18,7 @@ const player = {
 const tiles = [];
 
 const GRID_HEIGHT = 10;
-const GRID_WIDTH = 16;
+const GRID_WIDTH = 20;
 const TILE_SIZE = 32;
 
 for (let i = 0; i < GRID_HEIGHT; i++) {
@@ -39,11 +45,66 @@ tiles[1][5] = 1;
 tiles[1][6] = 1;
 tiles[1][7] = 1;
 tiles[1][8] = 1;
+tiles[1][9] = 1;
+tiles[2][9] = 1;
+tiles[2][8] = 1;
+tiles[2][7] = 1;
+tiles[3][7] = 1;
+tiles[3][8] = 1;
+tiles[3][9] = 1;
+tiles[4][8] = 1;
+tiles[5][8] = 1;
+tiles[6][8] = 1;
+tiles[6][7] = 1;
+tiles[7][7] = 1;
+tiles[8][7] = 1;
+tiles[9][7] = 1;
+tiles[9][8] = 1;
+tiles[9][9] = 1;
+tiles[9][10] = 1;
+tiles[8][10] = 1;
+tiles[7][10] = 1;
+tiles[6][10] = 1;
+tiles[6][9] = 1;
+tiles[9][11] = 1;
+tiles[9][12] = 1;
+tiles[8][12] = 1;
+tiles[7][12] = 1;
+tiles[6][12] = 1;
+tiles[5][12] = 1;
+tiles[4][12] = 1;
+tiles[4][13] = 1;
+tiles[4][14] = 1;
+tiles[3][14] = 1;
+tiles[2][14] = 1;
+tiles[2][13] = 1;
+tiles[3][13] = 1;
+tiles[1][13] = 1;
+tiles[1][14] = 1;
+tiles[1][15] = 1;
+tiles[1][16] = 1;
+tiles[4][15] = 1;
+tiles[2][15] = 1;
+tiles[3][15] = 1;
+tiles[2][16] = 1;
+tiles[3][16] = 1;
+tiles[4][16] = 1;
 
+// ARROW
+tiles[1][5] = 6;
+
+// CHEST
+tiles[2][15] = 5;
+
+// TREES
 tiles[8][8] = 4;
 tiles[8][9] = 4;
 tiles[7][8] = 4;
 tiles[7][9] = 4;
+tiles[3][15] = 4;
+tiles[3][16] = 4;
+tiles[3][14] = 4;
+tiles[2][14] = 4;
 
 console.log(tiles);
 
@@ -51,6 +112,13 @@ function getTileAt({ row, col }) {
     if (row < 0 || col < 0 || row >= GRID_HEIGHT || col >= GRID_WIDTH) return "FUCK YOU!";
 
     return tiles[row][col];
+}
+
+function getTilesUnderPlayer() {
+    const tiles = [];
+
+    const topLeft = { x: player.x - player.regX + player.hitbox.x, y: player.y };
+    const topRight = { x: player.x - player.regX - player.hitbox.x, y: player.y };
 }
 
 function createTiles() {
@@ -88,6 +156,8 @@ function getClassForTileType(tiletype) {
         case 2: return "water";
         case 3: return "stone";
         case 4: return "tree";
+        case 5: return "chest";
+        case 6: return "arrow";
     }
 }
 
@@ -95,7 +165,15 @@ function coordFromPos({ x, y }) {
     const col = Math.floor(x / 32);
     const row = Math.floor(y / 32);
     const coord = { row, col };
+
     return coord;
+}
+
+function posFromCoord({ row, col }) {
+    const x = col * 32;
+    const y = row * 32;
+
+    return { x, y };
 }
 
 
@@ -218,7 +296,8 @@ function canMoveTo(position) {
         case 1: return true;
         case 2: return false;
         case 3: return true;
-        case 4: return false
+        case 4: return false;
+        case 5: return true;
     }
 
     if (position.x < 0 || position.x > 485 || position.y < 0 || position.y > 340) {
